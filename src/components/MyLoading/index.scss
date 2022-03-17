@@ -1,0 +1,28 @@
+$loading-color: #1890ff;
+
+#loading-wrapper{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  .loading{
+    // 设置居中
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    // 修改antd默认类的样式
+    .ant-spin-dot-item{
+      background-color: $loading-color;
+    }
+    .ant-spin-text{
+      color: $loading-color;
+    }
+  }
+}

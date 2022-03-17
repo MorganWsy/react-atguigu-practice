@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# 尚硅谷React实战项目
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 1. 初始化项目
 
-## Available Scripts
+- 要点1：如果要结合 react 和 typescript，则需要在`create-react-app xxx`生成项目后，下载`yarn add typescript @types/node @types/react @types/react-dom`（全局安装过 typescript，但是项目好像识别不到，所以只能在项目中局部安装了）。
+- 要点2：将项目中的`.jsx`文件都改成`.tsx`就行（即使组件名称为`index.tsx`，引入组件时路径也必须完整，即必须包含`index.tsx`，这与`index.jsx`文件的引入不同！）
+- 要点3：想要在项目中使用`scss`或`sass`，则需要单独下载`yarn add node-sass -D`，`create-react-app`脚手架默认给我们安装了`sass-loader`、`less-loader`、`less`、`style-loader`、`css-loader`，并且在`webpack.config.js`文件中进行了配置！所以只需要下载`node-sass`包就可以使用 scss 了（使用 less 则不需要单独下载其他包）
+- 要点4：在项目中引入`reset.css`文件。该文件可以在`github`上搜索找到并下载。
 
-In the project directory, you can run:
+## 2. 高阶组件和高阶函数
 
-### `npm start`
+### 1. 什么是高阶函数？
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 接收的参数是函数。
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 返回的值是函数。
 
-### `npm test`
+- 常见的高阶函数：
+  
+  - 定时器：`setTimeout()`、`setinterval()`。
+  
+  - `Promise`函数：`new Promise((resolve,reject)=>{})`
+  
+  - `then()`函数、`catch()`函数
+  
+  - 数组方法：`forEach()`、`map()`、`filter()`、`reduce()`、`find()`
+  
+  - 函数对象的`bind()`方法。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 高阶函数更具由2扩展性。
 
-### `npm run build`
+### 2. 什么是高阶组件？
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 高阶组件本身就是个函数，无论是函数式组件还是类式组件(类式组件其实也是函数)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 可以接收一个组件并返回一个新的组件，那它就是高阶组件。一般会给接收的组件传入特定的属性，达到扩展接收组件的功能的目的。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 3. 维持登录与自动登录
 
-### `npm run eject`
+### 1. 要求
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. 登录后，刷新页面依然是已登录状态（维持登录）。
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. 登录后，关闭浏览器后再打开浏览器访问系统，依然是登录状态（自动登录）。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. 登录后，访问登录界面会自动跳转到管理界面。
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 2. 注意点
 
-## Learn More
+- 要点1：下载`store`库（js版）和这个库的类型定义包`@types/store`，并在`utils`文件夹的`storageUtil.js`文件中封装好，暴露出去。
+  
+  ![](E:\frontend\React\react-practice\img\store包.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- 要点2：将登录的用户的信息使用`storeageUtil.js`中的方法保存。
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 要点3：在`index.js`入口文件读取本地保存的用户数据，并存储到内存中，然后我们从内存中读取用户数据并显示！这样更快。
