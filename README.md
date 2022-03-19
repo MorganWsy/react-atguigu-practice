@@ -179,3 +179,35 @@
   - 将前端的ajax请求转发到服务器端。
 
 - 运行在哪：代理服务器运行在前端。
+
+
+
+## 5. 使用useEffect()方法遇到的问题
+
+- `useEffect()`方法的第二个参数必须是空数组，这样它的第一个参数函数才能是`componentDidMount()`钩子。
+
+- 其他需要注意的地方可以看代码注释：
+
+```tsx
+  const [time, setTime] = useState(formatTime(Date.now()));
+  const [weather, setWeather] = useState({ text: '晴', temp: 20, city: '南昌', img: SunDay });
+  const [username, setUsername] = useState('');
+
+  // KEY：useEffect方法没有传第二个参数，则第一个参数函数相当于componentDidCount()钩子。
+  useEffect(() => {
+    // KEY：必须在componentDidCount()这个钩子中调用！在外侧调用会因为组件的更新而一直发送ajax请求
+    getWeather('南昌市');
+    // 从内存中读取用户名，并更新状态
+    setUsername(storageUtil.getUser().username);
+
+    // 组件加载后，设置定时器
+    let timeId = setInterval(() => {
+      // 更新状态
+      setTime(formatTime(Date.now()));
+    }, 1000)
+    return () => {
+      // 组件将要卸载时，清除定时器
+      clearInterval(timeId);
+    }
+  }, []);
+```

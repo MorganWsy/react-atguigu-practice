@@ -3,17 +3,17 @@
 import {message} from 'antd';
 import ajax from './ajax';
 
-// export async function reqCityIDWithName(name){
-//   const res =  await ajax('/api2/api/weather',{name: name});
-//   // data是string类型
-//   const {status,data} = res.data;
-//   if(status === 0){
-//     return Number(data);
-//   }else{
-//     // 如果查询失败则默认显示北京市的天气
-//     return 110100;
-//   }
-// }
+export async function reqCityIdWithName(name){
+  const res =  await ajax('/api2/api/weather',{name: name});
+  // data是string类型
+  const {status,data} = res.data;
+  if(status === 0){
+    return Number(data);
+  }else{
+    // 如果查询失败则默认显示北京市的天气
+    return 110100;
+  }
+}
 
 export default function reqWeather(id){
   // http://localhost:3000/weather/weather/v1/...

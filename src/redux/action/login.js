@@ -1,5 +1,9 @@
-import {SAVE_USERINFO} from '../constant';
+import {SAVE_USERINFO, DELETE_USERINFO} from '../constant';
 
 export const createLoginAction = (data) => {
-  return {type: SAVE_USERINFO,data};
+  if(data['username']){
+    return {type: SAVE_USERINFO,data};
+  }else{
+    return {type: DELETE_USERINFO, data};
+  }
 }

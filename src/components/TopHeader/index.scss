@@ -1,3 +1,5 @@
+$warnColor: #ff5100;
+
 .admin-main-header {
   height: 6vh;
   line-height: 6vh;
@@ -19,7 +21,7 @@
   }
   .main-header-weather{
     position: absolute;
-    right: 10vw;
+    right: 12vw;
     .main-header-weather-time{
       font-size: .9vw;
     }
@@ -36,5 +38,12 @@
     position: absolute;
     right: 2vw;
     font-size: .9vw;
+    h2{
+      float: left;
+      margin-right: .5vw;
+    }
+    a{
+      color: $warnColor;
+    }
   }
 }

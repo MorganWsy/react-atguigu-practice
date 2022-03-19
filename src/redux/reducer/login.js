@@ -1,4 +1,4 @@
-import { SAVE_USERINFO } from "../constant";
+import { SAVE_USERINFO, DELETE_USERINFO } from "../constant";
 
 const initialState = [];
 export default function loginReducer (previousState=initialState,action){
@@ -7,6 +7,8 @@ export default function loginReducer (previousState=initialState,action){
   switch(type){
     case SAVE_USERINFO:
       return [...previousState, data];
+    case DELETE_USERINFO:
+      return [];
     default:
       return previousState;
   }
