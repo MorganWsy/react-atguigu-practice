@@ -1,0 +1,41 @@
+$fontColor: #fff;
+
+.admin-wrapper {
+  width: 100vw;
+  height: 100vh;
+  // 左侧导航栏（LeftNav组件）
+  .admin-nav {
+    width: 100%;
+    height: 100%;
+    .admin-nav-header {
+      background-color: #130202;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 2vh 0;
+      img {
+        width: 6vh;
+        height: 6vh;
+      }
+      h1 {
+        font-size: 1vw;
+        color: $fontColor;
+        // 重置样式
+        margin-bottom: 0;
+      }
+    }
+  }
+  // 右侧主体部分（TopHeader组件）
+  .admin-main {
+    // 这个样式在TopHeader组件的index.scss文件中
+    // .admin-main-header {}
+    .admin-main-content {
+      background: #eee;
+    }
+    .admin-main-footer {
+      background: #fff;
+      text-align: center;
+    }
+  }
+}

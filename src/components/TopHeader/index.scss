@@ -1,0 +1,40 @@
+.admin-main-header {
+  height: 6vh;
+  line-height: 6vh;
+  color: rgba(0,0,0,0.85);
+  padding: 0 1vw;
+  background: #fff;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  position: relative;
+
+  .main-header-title{
+    position: absolute;
+    left: 6vw;
+    color: #333;
+    font-size: 1vw;
+    // 重置样式
+    margin-bottom: 0;
+  }
+  .main-header-weather{
+    position: absolute;
+    right: 10vw;
+    .main-header-weather-time{
+      font-size: .9vw;
+    }
+    img{
+      width: 30px;
+      height: 30px;
+      margin: 0 .5vw 0 1vw;
+    }
+    .main-header-weather-info{
+      font-size: .9vw;
+    }
+  }
+  .main-header-welcome{
+    position: absolute;
+    right: 2vw;
+    font-size: .9vw;
+  }
+}

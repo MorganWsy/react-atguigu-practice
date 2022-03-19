@@ -54,3 +54,128 @@
 - 要点2：将登录的用户的信息使用`storeageUtil.js`中的方法保存。
 
 - 要点3：在`index.js`入口文件读取本地保存的用户数据，并存储到内存中，然后我们从内存中读取用户数据并显示！这样更快。
+
+## 4. 导航链接和路由表
+
+### 1. 导航链接
+
+- 一级路由对应的导航链接的`to`属性的值包括`/`；
+
+- 二级、三级路由对应的导航链接的`to`属性的值前面需要加上一级导航链接。
+
+- 每个`Item`组件的`key`属性的值为导航链接，这样`key`就是唯一的了。
+
+```tsx
+// 方法1：静态添加导航链接
+<Menu defaultSelectedKeys={['/home']} mode="inline" theme="dark">
+        {/* 将路由链接指定为key的值，则key就是唯一的 */}
+        <Item key="/home" icon={<PieChartOutlined />}>
+          <Link to='/home'>首页</Link>
+        </Item>
+
+        <Item key='/user' icon={<DesktopOutlined />}>
+          <Link to='/user'>用户管理</Link>
+        </Item>
+
+        <SubMenu key="sub1" icon={<DesktopOutlined />} title="商品详情">
+          <Item key="/goods/category">
+            <Link to='/goods/category'>商品分类</Link>
+          </Item>
+          <Item key="/goods/manage">
+            <Link to='/goods/manage'>商品管理</Link>
+          </Item>
+        </SubMenu>
+
+        <SubMenu key="sub2" icon={<PieChartOutlined />} title="图表">
+          <Item key="/charts/pie">
+            <Link to='/charts/pie'>饼图</Link>
+          </Item>
+          <Item key="/charts/bar">
+            <Link to='/charts/bar'>柱状图</Link>
+          </Item>
+          <Item key='/charts/line'>
+            <Link to='/charts/line'>折线图</Link>
+          </Item>
+        </SubMenu>
+ </Menu>
+
+// 方法2：动态添加导航链接
+// NOTE: 读取 config/navList.js 文件的内容，动态渲染导航链接，使用了递归。
+  const renderNavList = (list: NavList, parentKey = '') => {
+    return list.map((item) => {
+      if (item.children) {
+        // KEY：保存父级路由的key值，并作为参数传递给renderNavList函数
+        parentKey = item.key;
+        return (
+          <SubMenu key={item.key} icon={item.icon} title={item.title}>
+            {renderNavList(item.children, parentKey)}
+          </SubMenu>
+        )
+      } else {
+        // 如果没有父级路由，则parentKey默认是空串
+        return (
+          <Item key={parentKey + item.key} icon={item.icon}>
+            <Link to={parentKey + item.key}>{item.title}</Link>
+          </Item>
+        )
+      }
+    });
+  }
+
+<Menu defaultSelectedKeys={['/home']} mode="inline" theme="dark">
+  {renderNavList(navList)}
+</Menu>
+```
+
+2. 需要解决的两个问题：
+   
+   - 当我们刷新页面的时候，如何选中当前路由链接下的菜单项。
+   
+   > 使用`Menu`组件的`selectedKeys`属性，将当前菜单项的`key`值赋给`selectedKeys`。
+   
+   - 当我们刷新页面时，如果正位于某个子菜单中，如何打开该子菜单的父菜单并关闭其他父菜单。
+   
+   > 使用`Menu`组件的`defaultOpenKeys`属性，将父菜单的`key`值赋给`defaultOpenKeys`。
+
+### 1. 办法
+
+- 在前端配置代理服务器 ==> 只能解决开发环境的跨域问题。
+1. 在`package.json`文件中配置`"proxy": "http://后端域名:端口"`。如：`"proxy": "http://localhost:5000"`。
+
+2. 在项目根目录创建`setupProxy.js`文件，文件名不能变！！配置如下：
+   
+   ```js
+   /* 配置服务器代理。需要使用commonjs规范 */
+   const proxy = require('http-proxy-middleware');
+   
+   module.exports = function (app) {
+     app.use(
+       proxy.createProxyMiddleware('/api1', {
+         target: 'http://localhost:5000',
+         changeOrigin: true,
+         pathRewrite: {
+           '^/api1': ''
+         }
+       }),
+       proxy.createProxyMiddleware('/api2',{
+         target: 'http://localhost: 5000',
+         changeOrigin: true,
+         pathRewrite: {
+           '^api2': ''
+         }
+       })
+     )
+   }
+   ```
+
+### 2. 什么是代理服务器？
+
+- 具有特定功能的程序，可以解决开发时发送ajax请求出现的跨域问题。
+
+- 功能：
+  
+  - 监视前端服务器，并拦截前端发送的ajax请求。
+  
+  - 将前端的ajax请求转发到服务器端。
+
+- 运行在哪：代理服务器运行在前端。

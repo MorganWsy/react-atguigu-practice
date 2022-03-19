@@ -4,19 +4,26 @@ import {connect} from 'react-redux';
 import { Form, Input, Button, Checkbox,message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {createLoginAction} from '../../redux/action/login';
-import ajax from '../../api/ajax';
+import ajax from '../../api/ajax.js';
 import storageUtil from '../../utils/storageUtil';
 import './index.scss';
-// @ts-ignore
-import logo from './images/logo.png';
+import logo from '../../assets/images/logo.png';
 
 type FormData = {
   username: string,
   password: string,
   remeber: boolean
 }
+type User = {
+  _id: string,
+  username: string,
+  password: string,
+  create_time: number,
+  __v: number,
+  saveUserInfo: (info: User) => {}
+}
 /* UI组件 */
-export function Login(props) {
+function Login(props: User) {
   // NOTE:React Hook函数必须在组件渲染之前使用！
   const navigate = useNavigate();
   
@@ -78,10 +85,10 @@ export function Login(props) {
   )
 }
 
-const mapStateToProps = state => ({})
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state:{ userInfo: User[] }) => ({})
+const mapDispatchToProps = (dispatch:any) => {
   return {
-    saveUserInfo: (info) => {dispatch(createLoginAction(info))}
+    saveUserInfo: (info:User) => {dispatch(createLoginAction(info))}
   }
 }
 /* 容器组件 */

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import React,{ Fragment } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { routeTable } from './routes';
 import './App.scss';

@@ -1,12 +1,9 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, NavLinkProps } from 'react-router-dom'
+import './index.scss';
 
-export default function MyNavLink(props) {
-  const activeStyle= {
-    color: '#fff',
-    backgroundColor: 'seagreen'
-  }
+export default function MyNavLink(props: NavLinkProps) {
   return (
-    <NavLink className='list-item' style={({isActive}) => isActive ? activeStyle : undefined} {...props}/>
+    <NavLink className={(isActive) => isActive ? 'myActive list-item' : 'list-item'} {...props}/>
   )
 }
