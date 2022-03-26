@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button,Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { collapsedAction } from 'redux/action/admin';
 import reqWeather, { reqCityIdWithName } from '../../api/weather';
 import formatTime from '../../utils/formatTime';
 import storageUtil from '../../utils/storageUtil';
 import navList from '../../config/navList';
-import {createLoginAction} from '../../redux/action/login';
+import { createLoginAction } from '../../redux/action/login';
+import LinkButton from '../LinkButton';
+
 import './index.scss';
 import SunDay from '../../assets/images/sunday.png';
 import Cloudy from '../../assets/images/cloudy.png';
@@ -22,11 +24,15 @@ function TopHeader(props: any) {
   const [weather, setWeather] = useState({ text: '晴', temp: 20, city: '南昌', img: SunDay });
   const [username, setUsername] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  let {pathname} = useLocation();
+  let { pathname } = useLocation();
   let navigate = useNavigate();
-  let navTitle = '首页';
   // 暂时放在这里
-  navTitle = getNavTitle();
+  let navTitle = getNavTitle();
+
+  // KEY:只有当 pathname 的值变化了，才会执行 useMemo 函数的第一个参数函数
+  useMemo(() => {
+    navTitle = getNavTitle()
+  }, [pathname])
 
   // React Hooks的方法都不能在其他函数内部调用
   // KEY：useEffect方法没有传第二个参数，则第一个参数函数相当于componentDidCount()钩子。
@@ -36,7 +42,6 @@ function TopHeader(props: any) {
     getWeather('南昌市');
     // 从内存中读取用户名，并更新状态
     setUsername(storageUtil.getUser().username);
-
     // 组件加载后，设置定时器
     // let timeId = setInterval(() => {
     //   // 更新状态(每次更新状态,组件都会重新渲染一次,所以如果在TopHeader组件中console.log(xxx),会一直输出...)
@@ -82,41 +87,44 @@ function TopHeader(props: any) {
     }
   }
   // 获取Header组件上的导航文本
-  function getNavTitle(){
+  function getNavTitle() {
     pathname = pathname === '/' ? '/home' : pathname;
     // 获取当前页面的路由地址
-    let navTitle = '';
+    let title;
     navList.forEach((item) => {
-      if(item.key === pathname){
-        navTitle = item.title;
-      }else if(item.children){
+      if (item.key === pathname) {
+        title = <span style={{fontWeight: 'bold'}}>{item.title}</span>;
+      } else if (item.children) {
         let res = item.children.filter((subItem) => {
           return (item.key + subItem.key) === pathname;
         });
         // res是个满足要求的项组成的数组，如果里面有值，则赋值给navTitle
-        if(res.length){
-          navTitle = item.title + ' / ' + res[0].title;
+        if (res.length) {
+          title = (<div>
+            <span style={{color:'#999'}}>{item.title} / </span>
+            <span style={{fontWeight:'bold'}}>{res[0].title}</span>
+          </div>);
         }
       }
     });
-    return navTitle;
+    return title;
   }
 
-  function signOut(){
+  function signOut() {
     // 打开对话框
     setIsModalVisible(true);
   }
-  function handleOk(){
+  function handleOk() {
     // 清除本地保存的用户信息
     storageUtil.removeUser();
     // 传入空对象已删除redux中保存的用户信息
     props.saveUserInfo({});
     // 删除信息后才能跳转到登录页面!且模式为replace
-    navigate('/login',{
+    navigate('/login', {
       replace: true
     });
   }
-  function handleCancel(){
+  function handleCancel() {
     setIsModalVisible(false);
   }
   return (
@@ -132,7 +140,7 @@ function TopHeader(props: any) {
       </div>
       <div className="main-header-welcome">
         <h2>欢迎您，{username}</h2>
-        <a href="#" onClick={signOut}>退出</a>
+        <LinkButton onClick={signOut} style={{color: 'seagreen'}}>退出</LinkButton>
       </div>
       <Modal title="退出系统" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <p>您确定要退出吗?</p>
@@ -154,7 +162,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     // 控制sider组件是否收缩
     toggleCollapsed: (data: Data) => { dispatch(collapsedAction(data)) },
-    saveUserInfo: (info: Data) => {dispatch(createLoginAction(info))}
+    saveUserInfo: (info: Data) => { dispatch(createLoginAction(info)) }
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TopHeader);

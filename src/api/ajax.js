@@ -1,5 +1,6 @@
 /* 
   - 二次封装axios，该函数返回的都是promise对象。
+  - 封装的目的：为了统一处理使用axios发生请求出现的错误！！
 */
 import axios from 'axios';
 import { message } from 'antd';
@@ -17,6 +18,9 @@ export default function ajax(url, data = {}, method = "GET") {
         break;
       case "post":
         promise = axios.post(url, data);
+        break;
+      case 'put':
+        promise = axios.put(url, data);
         break;
       case "delete":
         promise = axios.delete(url, {

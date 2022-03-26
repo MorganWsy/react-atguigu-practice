@@ -66,7 +66,7 @@ function Login(props: User) {
         <h2>用户登录</h2>
         <Form className='login-form' initialValues={{ remeber: true}} onFinish={handleSubmitForm} >
           {/* rules对象中的message属性用于显示提示信息(当没有填写表单时)。这种验证称为声明式验证，还可以使用validator属性，并传递一个函数进行验证，称为自定义验证。 */}
-          <Form.Item name='username'initialValue='admin' rules={[{ required: true, message: '用户名是必填的!'},{type: 'string', min: 4, max: 12,message:'用户名的长度在4-12位之间!'},{pattern: /^[a-z|0-9|_]+\S$/i,message: '用户名只能由英文、数字、下滑线组成'}]}>
+          <Form.Item name='username' initialValue='admin' rules={[{ required: true, message: '用户名是必填的!'},{type: 'string', min: 4, max: 12,message:'用户名的长度在4-12位之间!'},{pattern: /^[a-z|0-9|_]+\S$/i,message: '用户名只能由英文、数字、下滑线组成'}]}>
             <Input type='text' prefix={<UserOutlined />} placeholder='请输入用户名' />
           </Form.Item>
           <Form.Item name='password' rules={[{ required: true, message: '密码是必填的!' },{type: 'string', min: 8, message: '密码长度不能少于8位'},{pattern: /^[a-z|0-9]+\S/i,message: '密码只能由英文、数字、特殊字符组成'}]}>

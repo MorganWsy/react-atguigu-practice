@@ -7,13 +7,16 @@ import LocalLoading from "../components/LocalLoading";
 const Login = lazy(() => { return import('../pages/Login') });
 const Admin = lazy(() => { return import('../pages/Admin') });
 const Home = lazy(() => { return import('../pages/Home') });
-const Category = lazy(() => { return import('../pages/Goods/Category.tsx') });
-const GoodsManage = lazy(() => { return import('../pages/Goods/GoodsManage.tsx') });
+const Category = lazy(() => { return import('../pages/Goods/Category/index.tsx') });
+const GoodsManage = lazy(() => { return import('../pages/Goods/GoodsManage/index.tsx') });
 const UserManage = lazy(() => { return import('../pages/UserManage') });
 const RoleManage = lazy(() => { return import('../pages/RoleManage') });
 const Pie = lazy(() => { return import('../pages/Charts/Pie.tsx') });
 const Line = lazy(() => { return import('../pages/Charts/Line.tsx') });
 const Bar = lazy(() => { return import('../pages/Charts/Bar.tsx') });
+const ManageHome = lazy(() => import('../pages/Goods/GoodsManage/ManageHome'));
+const GoodsDetail = lazy(() => import('../pages/Goods/GoodsManage/GoodsDetail'));
+const AddGoods = lazy(() => import('../pages/Goods/GoodsManage/AddGoods'));
 
 // KEY：注意路由表的内容
 export const routeTable = [
@@ -51,7 +54,26 @@ export const routeTable = [
           },
           {
             path: 'manage',
-            element: <Suspense fallback={<LocalLoading />}><GoodsManage /></Suspense>
+            element: <Suspense fallback={<LocalLoading />}><GoodsManage /></Suspense>,
+            children: [
+              {
+                index: true,//表示在 localhost:xxxx/goods/manage 路径下，显示ManageHome组件
+                element: <Suspense fallback={<LocalLoading/>}><ManageHome/></Suspense>
+              },
+              {
+                path: 'detail',
+                element: <Suspense fallback={<LocalLoading/>}><GoodsDetail/></Suspense>
+              },
+              {
+                path: 'addgoods',
+                element: <Suspense fallback={<LocalLoading/>}><AddGoods/></Suspense>
+              },
+              {
+                // 如果没有匹配到manage/detail、manage/addgoods，则重定向到manage/
+                path: '/goods/manage/*',
+                element: <Navigate to='/goods/manage'/>
+              }
+            ]
           }
         ]
       },

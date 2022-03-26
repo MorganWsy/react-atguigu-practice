@@ -9,7 +9,7 @@ import {
   LineChartOutlined
 } from '@ant-design/icons';
 
-/* KEY：配置导航链接！！ */
+/* KEY：动态配置导航链接！！ */
 const navList = [
   {
     key: '/home',//key属性的值与to属性的值一样，所以都统一使用key属性

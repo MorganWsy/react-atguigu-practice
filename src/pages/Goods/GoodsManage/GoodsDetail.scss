@@ -1,0 +1,35 @@
+.manage-detail-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 1vw;
+  background-color: #eee;
+  // Card组件
+  .manage-detail-card {
+    height: 100%;
+    // 覆盖默认样式
+    .ant-card-body {
+      padding: 12px;
+    }
+    // List组件的Item子组件
+    .detail-list-item {
+      // 重置antd的默认样式
+      justify-content: unset;
+      padding: 12px;
+      h3 {
+        margin-right: 2vw;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      // 覆盖antd的样式
+      .ant-descriptions-item-label {
+        color: #999;
+      }
+    }
+
+    .detail-title-returnIcon {
+      cursor: pointer;
+      padding-right: 1vw;
+      font-size: 18px;
+    }
+  }
+}

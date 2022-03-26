@@ -1,0 +1,17 @@
+.manage-add-wrapper{
+  width: 100%;
+  height: 100%;
+  background-color: #eee;
+  padding: 1vw;
+  .manage-add-card{
+    height: 100%;
+  }
+  .ant-card-body{
+    padding: 12px;
+  }
+  .add-title-returnIcon{
+    padding-right: 1vw;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}

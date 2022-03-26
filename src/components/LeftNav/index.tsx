@@ -17,7 +17,9 @@ function LeftNav(props: any) {
   let currentPath: string = useLocation().pathname;
   // KEY：如果访问的是localhost:3000/，则将currentPath替换为'/home'，使得selectedKeys属性可以选中"首页"菜单项。这里和老师讲的不一样
   currentPath = currentPath === '/' ? '/home' : currentPath;
-  
+  currentPath = currentPath.includes('/detail') ? '/goods/manage': currentPath;
+  currentPath = currentPath.includes('/addgoods') ? '/goods/manage':currentPath;
+
   // NOTE: 读取 config/navList.js 文件的内容，动态渲染导航链接，使用了递归。
   const renderNavList = (list: NavItem[], parentKey = '') => {
     return list.map((item) => {
@@ -27,7 +29,7 @@ function LeftNav(props: any) {
         let res = item.children.find((value) => {
           return (item.key + value.key) === currentPath;
         });
-        // 如果当前访问的路径和子路由的key对上了，则将该子路由的父级路由的key赋给全局变量key
+        // 如果当前访问的路径和子路由的key对上了，则将该子路由的父路由的key赋给全局变量key
         if(res){
           key = item.key;
         }
@@ -37,7 +39,7 @@ function LeftNav(props: any) {
           </SubMenu>
         )
       } else {
-        // 如果没有父级路由，则parentKey默认是空串
+        // 如果没有子路由，则parentKey默认是空串
         return (
           <Item key={parentKey + item.key} icon={item.icon}>
             <Link to={parentKey + item.key}>{item.title}</Link>

@@ -5,6 +5,7 @@ const proxy = require('http-proxy-middleware');
 
 module.exports = function (app) {
   app.use(
+    // 获取自己服务器的资源
     proxy.createProxyMiddleware('/api1', {
       target: 'http://localhost:5000',
       changeOrigin: true,
@@ -12,7 +13,7 @@ module.exports = function (app) {
         '^/api1': ''
       }
     }),
-    // 不起作用，很奇怪
+    // 获取百度天气资源的服务器
     proxy.createProxyMiddleware('/weather',{
       target: 'https://api.map.baidu.com',
       secure: false,

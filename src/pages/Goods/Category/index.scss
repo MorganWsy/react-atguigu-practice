@@ -1,0 +1,20 @@
+.category-wrapper{
+  width: 100%;
+  height: 100%;
+  padding: 1vw;
+  color: seagreen;
+  .category-card{
+    height: 100%;
+  }
+  // 覆盖antd的默认样式
+  .ant-table{
+    height: 67vh;
+  }
+  .ant-select{
+    width: 100%;
+    margin-bottom: 2vh;
+  }
+  .ant-card-head-wrapper{
+    height: 48px
+  }
+}

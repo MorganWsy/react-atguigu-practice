@@ -1,0 +1,13 @@
+.manage-wrapper{
+  width: 100%;
+  height: 100%;
+  background-color: #eee;
+  padding: 1vw;
+  .manage-card{
+    height: 100%;
+  }
+  // 覆盖antd的默认样式
+  .ant-table{
+    height: 66vh;
+  }
+}

@@ -19,7 +19,7 @@ $fontColor: #fff;
         height: 6vh;
       }
       h1 {
-        font-size: 1vw;
+        font-size: 16px;
         color: $fontColor;
         // 重置样式
         margin-bottom: 0;
@@ -34,8 +34,13 @@ $fontColor: #fff;
       background: #eee;
     }
     .admin-main-footer {
+      height: 5vh;
+      line-height: 5vh;
+      color: #999;
       background: #fff;
       text-align: center;
+      // 重置antd默认样式
+      padding: 0;
     }
   }
 }

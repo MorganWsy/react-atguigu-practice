@@ -180,8 +180,6 @@
 
 - 运行在哪：代理服务器运行在前端。
 
-
-
 ## 5. 使用useEffect()方法遇到的问题
 
 - `useEffect()`方法的第二个参数必须是空数组，这样它的第一个参数函数才能是`componentDidMount()`钩子。
@@ -211,3 +209,70 @@
     }
   }, []);
 ```
+
+## 6. 自定义像超链接的按钮组件
+
+- 在 React 中使用`<a href='javascript:'>退出</a>`会出现警告，因为`href`属性不是一个合法的地址。所以我们需要自定义一个组件，它长的像超链接但是却是`<button>`。
+
+- 实现如下：
+  
+  ```tsx
+  import React from 'react';
+  import './index.scss';
+  
+  export default function LinkButton(props:any) {
+    return (
+      <button {...props} className='linkButton '></button>
+    )
+  }
+  //index.scss
+  .linkButton{
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  ```
+
+## 7. jsonp原理
+
+- `jsonp`只能解决`GET`类型的ajax请求的跨域问题；
+
+- `jsonp`请求不是 ajax 请求，而是`GET`请求；
+
+- **基本原理：**
+  
+  1. 在浏览器端动态生成`<script>`标签，标签的`src`属性就是接口的url（使用了`<script>`标签可以访问跨域资源的特性）
+  
+  2. 在浏览器端自己定义好接收响应数据的函数，并将函数名通过`GET`请求参数的形式提交给服务器，如：`https://api.map.baidu.com/weather/v1?district_id=${id}&data_type=all&callback=你定义的函数名`
+  
+  3. 服务器接收到`<script>`标签的请求，产生相应的数据，并将数据作为实参传递给`callback`键对应的函数。
+  
+  4. 浏览器端接收到数据，自动执行我们定义的函数，这样就拿到了我们接口提供的数据。
+
+## 8. 分页的两种方式
+
+1. 前端分页
+   
+   - 特点：从接口一次性获取所有数据，选择不同页码时不会再向接口发送请求。不需要指定请求参数，如页码、每页的条数等。
+   
+   - 场景：**适合数据量小**的需求。
+
+2. 后端分页
+   
+   - 特点：每翻一页都会向接口请求一次数据，需要发送请求参数（当前页码pageNum和每页数据的条数pageSize）。响应的数据包括当前页码数据的数组和总记录数。
+   
+   - 场景：**适合数据量大**的需求。
+
+## 9. 商品管理组件的优化
+
+- 将变量作为某个对象的 key 值，需要将该变量用`[]`括起来。如：`[searchType]: searchContent`
+
+- 当进入`/goods/manage/detail`路由，左侧的导航组件没有选中高亮【商品管理】，且刷新页码时，左侧的导航组件没有展开【商品详情】组件。
+  
+  ```tsx
+  // LeftNav.tsx
+  // 如果当前访问的路径是'localhost:xxxx/goods/manage/detail'，
+  // 则将其修改为'localhost:xxxx/goods/manage'，以便高亮显示和展开导航组件。
+  currentPath = currentPath.includes('/detail') ? '/goods/manage': currentPath;
+  ```
