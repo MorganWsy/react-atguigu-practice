@@ -20,9 +20,18 @@
         font-size: 16px;
         font-weight: bold;
       }
+      .detail-list-item-detail{
+        width: 75vw;
+        height: 180px;
+        overflow-y: auto;
+      }
+
       // 覆盖antd的样式
       .ant-descriptions-item-label {
         color: #999;
+      }
+      p{
+        margin: 0;
       }
     }
 

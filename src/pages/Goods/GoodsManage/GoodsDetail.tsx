@@ -5,7 +5,6 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import './GoodsDetail.scss';
 import NoImage from '../../../assets/images/noimage.png';
 import { BASE_IMG_URL } from 'utils/constant';
-import { reqGetGoodsCategory } from 'api/goods';
 const { Item } = List;
 const { PreviewGroup } = Image;
 
@@ -34,7 +33,9 @@ type Detail = {
     detail: any,
     _v: number
   },
-  name: string[]
+  categoryName: string[],
+  // 当前页码
+  pageNum: number
 }
 
 export default function GoodsDetail() {
@@ -42,7 +43,7 @@ export default function GoodsDetail() {
 
   // state 对象中包含 product 对象和 name 数组
   const { state } = useLocation();
-  const { product: { name, price, desc, imgs, detail }, name: categoryArr } = state as Detail;
+  const { product: { name, price, desc, imgs, detail }, categoryName: categoryArr,pageNum } = state as Detail;
 
   const data = [
     {
@@ -76,22 +77,17 @@ export default function GoodsDetail() {
       )
     },
     {
+      title: '商品详情:',
       content: (
-        <Descriptions title='商品详情:'>
-          <Descriptions.Item label="CPU">{detail['CPU']}</Descriptions.Item>
-          <Descriptions.Item label="内存容量">{detail['内存容量']}</Descriptions.Item>
-          <Descriptions.Item label="硬盘容量">{detail['硬盘容量']}</Descriptions.Item>
-          <Descriptions.Item label="显存容量">{detail['显存容量']}</Descriptions.Item>
-          <Descriptions.Item label="显卡类型">{detail['显卡类型']}</Descriptions.Item>
-          <Descriptions.Item label="操作系统">{detail['操作系统']}</Descriptions.Item>
-          <Descriptions.Item label="光驱类型">{detail['光驱类型']}</Descriptions.Item>
-        </Descriptions>
+        // NOTE：dangerouslySetInnerHTML 属性可以将html格式转成普通文本，类似于原生js的innerHTML属性
+        <div dangerouslySetInnerHTML={{ __html: detail }} className='detail-list-item-detail'></div>
       )
     }
   ]
   const cardTitle = (
     <div>
-      <ArrowLeftOutlined className='detail-title-returnIcon' onClick={() => { navigate(-1) }} />
+      {/* KEY：将用户当前页码再返回给MangeHome组件 */}
+      <ArrowLeftOutlined className='detail-title-returnIcon' onClick={() => { navigate('/goods/manage',{state: {pageNum}}) }} title='返回'/>
       <span>商品详情</span>
     </div>
   );

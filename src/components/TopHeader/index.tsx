@@ -96,14 +96,18 @@ function TopHeader(props: any) {
         title = <span style={{fontWeight: 'bold'}}>{item.title}</span>;
       } else if (item.children) {
         let res = item.children.filter((subItem) => {
-          return (item.key + subItem.key) === pathname;
+          // 如pathname为localhost:3000/goods/manage/addgoods，item.key为'/goods'，subItem.key为'/manage'，要想显示导航文本，则只要使用indexOf判断'/goods/manage'在不在pathname中，不在就返回-1
+          return pathname.indexOf((item.key + subItem.key)) === 0;
+          // return (item.key + subItem.key) === pathname;
         });
         // res是个满足要求的项组成的数组，如果里面有值，则赋值给navTitle
         if (res.length) {
-          title = (<div>
-            <span style={{color:'#999'}}>{item.title} / </span>
-            <span style={{fontWeight:'bold'}}>{res[0].title}</span>
-          </div>);
+          title = (
+            <div>
+              <span style={{color:'#999'}}>{item.title} / </span>
+              <span style={{fontWeight:'bold'}}>{res[0].title}</span>
+            </div>
+          );
         }
       }
     });

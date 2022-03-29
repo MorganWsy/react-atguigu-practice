@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Button, Input, Select, Table, Tag,message } from 'antd';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Card, Button, Input, Select, Table, Tag, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import LinkButton from 'components/LinkButton';
 import { reqGetGoodsList, reqSearchGoods, reqUpdateIsSale, reqGetGoodsCategory } from 'api/goods';
@@ -38,7 +38,10 @@ type Category = {
 }
 export default function ManageHome() {
   const navigate = useNavigate();
-  const [currPageNum, setcurrPageNum] = useState(1);
+  const state = useLocation().state as { pageNum: number };
+  // NOTE: 这样做的目的是：从【商品详情】页返回后，能默认显示用户选择的商品所在页
+  const [currPageNum, setcurrPageNum] = useState(state ? state.pageNum : 1);
+
   const [isLoading, setIsLoading] = useState(false);
   const [goods, setGoods] = useState<GoodsData>({
     list: [
@@ -71,6 +74,7 @@ export default function ManageHome() {
       <Option value='desc'>按描述搜索</Option>
     </Select>
   );
+  // Card组件左上角
   const cardTitle = (
     <Search
       addonBefore={MySelect}
@@ -81,8 +85,9 @@ export default function ManageHome() {
       style={{ width: '28vw' }}
     />
   );
+  // Card组件右上角
   const cardExtra = (
-    <Button type='primary' icon={<PlusOutlined />} onClick={() => {navigate('addgoods')}}>添加商品</Button>
+    <Button type='primary' icon={<PlusOutlined />} onClick={() => { navigate('addgoods',{ state: {pageNum: currPageNum } }) }}>添加商品</Button>
   );
   const columns = [
     {
@@ -131,7 +136,12 @@ export default function ManageHome() {
           <div>
             <Button onClick={() => { handleSale(product) }} type='primary' size='small' className='manage-action-btn'>{product.isSale ? '下架' : '上架'}</Button>
             <LinkButton style={{ color: 'seagreen' }} onClick={() => { showGoodsDetail(product) }}>详情</LinkButton>
-            <LinkButton style={{ color: '#ff5100' }}>修改</LinkButton>
+            {/* 点击【修改】，跳转到【添加商品】页面，并将需要修改的商品的信息传递过去 */}
+            <LinkButton
+              style={{ color: '#ff5100' }}
+              onClick={() => { navigate('addgoods', { state: { product, pageNum: currPageNum } }) }}>
+              修改
+            </LinkButton>
           </div>
         )
       }
@@ -140,25 +150,27 @@ export default function ManageHome() {
   async function showGoodsDetail(product: Good) {
     // NOTE：在路由跳转前发送ajax请求，获取分类的名称，体验更好，不会有延迟。如果在GoodsDetail组件中发送ajax请求，会有一点延迟！
     const { categoryId, pCategoryId } = product;
-    let name: string[] = [];
+    let categoryName: string[] = [];
     if (pCategoryId === '0') {
-      // 商品位于一级分类下，只需要获取一级分类的名称
+      // NOTE：根据商品的categoryId获取商品的所处分类的名称（商品位于一级分类下，只需要获取一级分类的名称）
       const data: Category = await reqGetGoodsCategory(categoryId);
-      name[0] = data.name;
+      categoryName[0] = data.name;
     } else {
       // 商品位二级分类下，需要同时获取一级分类的名称和二级分类的名称
       // KEY：Promise.all方法同时发送两个ajax请求，这相当于并联，只有都成功了，才会返回数据。而前后发送两次ajax请求，相当于串联，效率会低
       const data: Category[] = await Promise.all([reqGetGoodsCategory(pCategoryId), reqGetGoodsCategory(categoryId)]);
-      name[0] = data[0].name;
-      name[1] = data[1].name;
+      categoryName[0] = data[0].name;
+      categoryName[1] = data[1].name;
     }
     // KEY: 使用useNavigate函数跳转到detail路由，并通过state属性将product对象传入detail路由
     navigate('detail', {
       state: {
         product,
-        name
+        categoryName,
+        // KEY：保存用户当前所在页码
+        pageNum: currPageNum
       }
-    }); 
+    });
   }
   async function handleSale(product: Good) {
     // 拿到当前商品的id和销售状态
@@ -190,17 +202,14 @@ export default function ManageHome() {
     } else {
       data = await reqGetGoodsList(pageNum, PAGE_SIZE);
     }
-    // 拿到数据
-    if (data) {
-      // 更新状态
-      setGoods(data);
-    }
 
+    // 将数据存储在状态中
+    setGoods(data);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    getGoodsList(1);
+    getGoodsList(currPageNum);
   }, [searchContent]);
 
   return (
@@ -212,7 +221,7 @@ export default function ManageHome() {
           loading={isLoading}
           bordered
           rowKey='_id'
-          pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true, total: goods.total }}
+          pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true, total: goods.total, current: currPageNum }}
           // 选择不同的页码，重新发送请求来获取相应的数据
           onChange={({ current }) => {
             getGoodsList(current!);

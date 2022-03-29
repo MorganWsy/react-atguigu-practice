@@ -264,7 +264,7 @@
    
    - 场景：**适合数据量大**的需求。
 
-## 9. 商品管理组件的优化
+## 9. 【商品管理】组件的注意点和优化
 
 - 将变量作为某个对象的 key 值，需要将该变量用`[]`括起来。如：`[searchType]: searchContent`
 
@@ -276,3 +276,19 @@
   // 则将其修改为'localhost:xxxx/goods/manage'，以便高亮显示和展开导航组件。
   currentPath = currentPath.includes('/detail') ? '/goods/manage': currentPath;
   ```
+
+- **<mark>子组件向父组件传递数据的两种方式：</mark>**
+  
+  1. 在父组件中创建一个函数，接受子组件传递的实参，父组件将这个函数通过`props`的形式传递给子组件调用。**常见方式。**
+  
+  2. 在子组件中创建一个函数`fn`，将要传递给父组件的数据作为返回值返回。父组件通过给子组件设置`ref`属性，如：`<Child ref={xxxRef}>`，可以`const data = xxxRef.current.fn();` 这样拿到子组件返回的数据！
+
+- <mark>`async`关键字定义的函数，其返回值是一个`Promise`对象</mark>，`Promise`对象的状态和值，是由返回值来决定的。如：没有指定返回值，则`Promise`对象的状态为成功，值为`undefined`。
+
+
+
+## 10. 随便记点东西
+
+- 使用`css`的`font-variant-numeric: 'tabular-nums'`可以实现数字、分数的等宽，`tabular-nums`表示启用表格数字显示，因为表格中数字都是等宽显示的，这样利于对齐。兼容性稍差。
+
+- 使用`css`的`font-feature-settings: 'tnum'` 也可以实现相同的功能。兼容性更好。

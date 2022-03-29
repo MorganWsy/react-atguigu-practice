@@ -7,7 +7,7 @@ export const reqGetCategoryList = (parentId) => {
   const url = `/api1/goods/category/list`;
   return new Promise((resolve,reject) => {
     ajax(url,{parentId: parentId},'GET').then((response) => {
-      const {data: {status,data,message: msg}} = response;
+      const {data: {status,data}} = response;
       // 获取分类列表成功
       if(status === 0){
         // data是个数组，包含所有商品分类（对象）

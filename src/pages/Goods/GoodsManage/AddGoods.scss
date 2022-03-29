@@ -6,12 +6,46 @@
   .manage-add-card{
     height: 100%;
   }
-  .ant-card-body{
-    padding: 12px;
-  }
   .add-title-returnIcon{
     padding-right: 1vw;
     font-size: 18px;
     cursor: pointer;
+  }
+  // 覆盖antd默认的样式
+  .ant-card-body{
+    padding: 0;
+    padding-top: 12px;
+  }
+  .ant-form-item{
+    margin-bottom: 12px;
+  }
+  
+  // 覆盖 react-draft-wysiwyg 库的默认样式
+  .public-DraftStyleDefault-block {
+    // 取消每一行的上下外边距
+    margin: 0;
+  }
+  .my-uploadImg-popup{
+    top: -280px;
+    left: -235px;
+    padding: 5px 15px;
+  }
+  .my-link-popup{
+    height: auto;
+    top: -190px;
+    left: -235px;
+    padding: 5px 15px;
+  }
+  // 覆盖默认样式
+  .rdw-link-modal-target-option{
+    margin-bottom: 10px;
+    span,input{
+      vertical-align: middle;
+    }
+  }
+  // 覆盖默认样式
+  .rdw-colorpicker-modal-options{
+    overflow: unset;
+    overflow-y: scroll;
   }
 }
